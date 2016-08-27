@@ -33,14 +33,6 @@ module.exports = React.createClass({
         }
     },
 
-    fetchNextArticles: function (page, perPage, callback) {
-        this.props.api.entries.get({
-            page: page,
-            perPage: perPage,
-            category: this.props.category
-        }, callback);
-    },
-
     getInitialStateAsync: function (callback) {
         callback(null, {
             page: 0,
@@ -48,20 +40,22 @@ module.exports = React.createClass({
             hasMore: true
         });
     },
-
-    includeLoadedArticles: function (page, articles) {
-        this.setState({
-            page: page + 1,
-            articles: helpers.createUniqueArray(this.state.articles.concat(articles), 'guid'),
-            hasMore: articles.length == this.props.perPage
-        });
-    },
-
     loadMoreArticles: function (page) {
-        this.fetchNextArticles(page, this.props.perPage, function (err, articles) {
-            if (err) return console.log(err);
-            this.includeLoadedArticles(page, articles);
-        }.bind(this));
+      this.props.api.entries.get({
+          page: page,
+          perPage: this.props.perPage,
+          category: this.props.category
+      }, function (err, articles) {
+          if (err) {
+            return console.log(err);
+          } else {
+            this.setState({
+                page: page + 1,
+                articles: helpers.createUniqueArray(this.state.articles.concat(articles), 'guid'),
+                hasMore: articles.length === this.props.perPage
+            });
+          }
+      }.bind(this));
     },
 
     getLoaderElement: function () {
