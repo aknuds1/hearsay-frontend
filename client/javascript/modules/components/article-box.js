@@ -85,7 +85,6 @@ module.exports = React.createClass({
                 <div className='row'>
                     <div>
                         <InfiniteScroll
-                            ref='masonryContainer'
                             pageStart={this.state.page - 1}
                             loader={this.getLoaderElement()}
                             loadMore={this.loadMoreArticles}
